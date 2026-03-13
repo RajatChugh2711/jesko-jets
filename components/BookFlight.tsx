@@ -151,7 +151,7 @@ export default function BookFlight() {
     <section
       ref={sectionRef}
       id="book"
-      className="relative py-32 md:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
+      className="relative py-20 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C9A55A]/20 to-transparent" />
 
@@ -170,7 +170,7 @@ export default function BookFlight() {
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
-        <div className="mb-14 text-center">
+        <div className="mb-10 md:mb-14 text-center">
           <p
             ref={eyebrowRef}
             className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4"
@@ -238,7 +238,7 @@ export default function BookFlight() {
           /* ── Form ── */
           <form
             onSubmit={handleSubmit}
-            className="book-form-panel grid md:grid-cols-2 gap-5 bg-[#0f0f0f] border border-white/5 p-8 md:p-12"
+            className="book-form-panel grid md:grid-cols-2 gap-4 md:gap-6 bg-[#0f0f0f] border border-white/5 p-6 md:p-10 lg:p-12"
           >
             {/* Name */}
             <div className="book-field flex flex-col gap-2">

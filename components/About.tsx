@@ -12,101 +12,129 @@ export default function About() {
   useLayoutEffect(() => {
 
     gsap.registerPlugin(ScrollTrigger);
-
+  
     const ctx = gsap.context(() => {
-
-      // ─────────────────────────────────────────────────────────────
-      //  PARALLAX — image moves slower than scroll (inside ctx so
-      //  it gets properly cleaned up on unmount / hot-reload).
-      // ─────────────────────────────────────────────────────────────
-      gsap.to(imgRef.current, {
-        y: -90,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
+  
+      /* IMAGE PARALLAX */
+  
+      gsap.to(imgRef.current,{
+        y:"+=10",
+        repeat:-1,
+        yoyo:true,
+        duration:4,
+        ease:"sine.inOut"
       });
-
-      // ─────────────────────────────────────────────────────────────
-      //  ENTRANCE TIMELINE
-      //
-      //  toggleActions: "restart none restart none"
-      //    ↑ "restart" on enter means every time the section scrolls
-      //      back into view the animation plays from the beginning —
-      //      this is what the user expects ("animate every time").
-      //
-      //  Previously the timeline had:
-      //    • "play reverse play reverse" → resumes mid-reverse, feels glitchy
-      //    • a DUPLICATE .from(".about-title") appended at the end,
-      //      which extended the duration and broke the reverse cycle
-      //  Both issues are fixed here.
-      // ─────────────────────────────────────────────────────────────
+  
+  
+      /* MASTER TIMELINE */
+  
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-          toggleActions: "restart none restart none",
-        },
-        defaults: { ease: "power3.out" },
+        scrollTrigger:{
+          trigger:sectionRef.current,
+          start:"top 75%",
+          end:"bottom 30%",
+          toggleActions:"restart none restart none"
+        }
       });
-
-      tl
-        .from(".about-title", {
-          y: 100,
-          opacity: 0,
+  
+  
+      /* TITLE REVEAL (luxury slide) */
+  
+      tl.fromTo(
+        ".about-title",
+        { y: 120, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.4,
+          ease: "power4.out"
+        }
+      )
+  
+  
+      /* DIVIDER LINE GROW */
+  
+      .from(".about-divider",{
+        scaleX:0,
+        transformOrigin:"left center",
+        duration:1,
+        ease:"power2.out"
+      },"-=0.8")
+  
+  
+      /* TEXT STAGGER */
+  
+      tl.fromTo(
+        ".about-text",
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.2,
           duration: 1.2,
-        })
-        .from(
-          ".about-divider",
-          { scaleX: 0, transformOrigin: "left center", duration: 0.9, ease: "power2.out" },
-          "-=0.8"
-        )
-        .from(
-          ".about-text",
-          { y: 60, opacity: 0, stagger: 0.18, duration: 1 },
-          "-=0.6"
-        )
-        .from(
-          imgRef.current,
-          { scale: 1.25, opacity: 0, duration: 1.4 },
-          "-=1"
-        )
-        .from(
-          ".stat-block",
-          { opacity: 0, y: 40, stagger: 0.2, duration: 0.8 },
-          "-=0.6"
-        )
-        .from(
-          ".about-cta",
-          { y: 30, opacity: 0, duration: 0.6 },
-          "-=0.4"
-        );
-
-    }, sectionRef);
-
+          ease: "power3.out"
+        },
+        "-=0.6"
+      )
+  
+  
+      /* IMAGE CINEMATIC REVEAL */
+  
+      .from(imgRef.current,{
+        scale:1.35,
+        opacity:0,
+        duration:1.6,
+        ease:"power3.out"
+      },"-=1")
+  
+  
+      /* STATS STAGGER */
+  
+      tl.fromTo(
+        ".stat-block",
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.25,
+          duration: 1,
+          ease: "power3.out"
+        },
+        "-=0.8"
+      )
+  
+  
+      /* CTA BUTTON */
+  
+      .from(".about-cta",{
+        y:30,
+        opacity:0,
+        duration:0.8,
+        ease:"power2.out"
+      },"-=0.5");
+  
+  
+    },sectionRef);
+  
     return () => ctx.revert();
-
-  }, []);
+  
+  },[]);
 
   return (
 
     <section
       ref={sectionRef}
       id="about"
-      className="relative py-32 md:py-40 px-8 md:px-20 lg:px-32 bg-[#0a0a0a] overflow-hidden"
+      className="relative py-20 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 bg-[#0a0a0a] overflow-hidden"
     >
 
       {/* top accent line */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C9A55A]/20 to-transparent" />
 
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 md:gap-24 items-center">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
 
         {/* ── LEFT CONTENT ── */}
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6 md:gap-8">
 
           <div className="about-title">
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4">
@@ -171,8 +199,7 @@ export default function About() {
 
           <div
             ref={imgRef}
-            className="absolute inset-0 scale-[1.15]"
-            style={{ willChange: "transform" }}
+            className="absolute inset-0 scale-[1.15] will-change-transform"
           >
             <Image
               src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?q=90&w=1200"

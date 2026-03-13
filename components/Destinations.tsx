@@ -108,7 +108,7 @@ export default function Destinations() {
     <section
       ref={sectionRef}
       id="destinations"
-      className="relative py-32 md:py-40 px-8 md:px-20 lg:px-32 bg-[#0a0a0a] overflow-hidden"
+      className="relative py-20 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 bg-[#0a0a0a] overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C9A55A]/20 to-transparent" />
 

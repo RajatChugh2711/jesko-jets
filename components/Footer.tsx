@@ -99,9 +99,9 @@ export default function Footer() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-20 lg:px-32 pt-20 pb-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-20 lg:px-32 pt-14 md:pt-20 pb-8 md:pb-10">
         {/* ── Top Row ── */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-14 pb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10 md:gap-14 pb-12 md:pb-16">
 
           {/* Brand Column */}
           <div ref={brandRef} className="lg:col-span-2 flex flex-col gap-6">

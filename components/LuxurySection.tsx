@@ -113,7 +113,7 @@ export default function LuxurySection() {
 
     <section
       ref={sectionRef}
-      className="relative bg-[#050505] text-white py-28 md:py-36 px-8 md:px-16 lg:px-24 overflow-hidden"
+      className="relative bg-[#050505] text-white py-20 md:py-32 lg:py-40 px-8 md:px-16 lg:px-24 overflow-hidden"
     >
 
       {/* Top separator */}
@@ -122,21 +122,21 @@ export default function LuxurySection() {
       <div className="max-w-[1400px] mx-auto">
 
         {/* ── TITLE ── */}
-        <div ref={titleRef} className="mb-16 md:mb-20">
+        <div ref={titleRef} className="mb-10 md:mb-16 lg:mb-20">
           <p className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-5">
             The Aircraft
           </p>
           <h2 className="text-[clamp(2.8rem,6vw,7rem)] leading-[0.92] font-light">
-            Fly in
+            Fly in 
             <span className="block font-bold italic">Luxury</span>
           </h2>
         </div>
 
         {/* Gold divider */}
-        <div ref={lineRef} className="w-full h-px bg-[#C9A55A]/20 mb-16 md:mb-24" />
+        <div ref={lineRef} className="w-full h-px bg-[#C9A55A]/20 mb-10 md:mb-16 lg:mb-24" />
 
         {/* ── CONTENT GRID ── */}
-        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-14 lg:gap-20 items-center">
 
           {/* ── JET ── */}
           <div
@@ -169,21 +169,21 @@ export default function LuxurySection() {
             <p className="text-[10px] tracking-[0.4em] text-[#C9A55A] uppercase mb-3">
               Gulfstream
             </p>
-            <h3 className="text-5xl md:text-6xl font-light leading-none mb-2">
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-light leading-none mb-2">
               G650<span className="font-bold">ER</span>
             </h3>
-            <p className="text-[10px] tracking-[0.3em] text-white/25 uppercase mb-8">
+            <p className="text-[10px] tracking-[0.3em] text-white/25 uppercase mb-6 md:mb-8">
               Ultra Long Range
             </p>
 
-            <p className="text-white/55 leading-relaxed mb-10 text-sm md:text-base font-light max-w-md">
+            <p className="text-white/55 leading-relaxed mb-8 md:mb-10 text-sm md:text-base font-light max-w-md">
               Featuring wings designed to minimise anything that could disrupt
               its natural aerodynamic balance and powered by high-thrust BR725
               engines, the G650ER is engineered for exceptional range and speed —
               redefining what it means to travel privately.
             </p>
 
-            <div className="w-10 h-px bg-[#C9A55A]/40 mb-10" />
+            <div className="w-10 h-px bg-[#C9A55A]/40 mb-8 md:mb-10" />
 
             {/* Spec grid */}
             <div className="grid grid-cols-2 gap-x-8 gap-y-8">
@@ -208,7 +208,7 @@ export default function LuxurySection() {
             {/* CTA */}
             <a
               href="#book"
-              className="inline-flex items-center gap-3 mt-12 text-[10px] tracking-[0.35em] uppercase text-[#C9A55A] hover:gap-6 transition-all duration-300 group"
+              className="inline-flex items-center gap-3 mt-8 md:mt-12 text-[10px] tracking-[0.35em] uppercase text-[#C9A55A] hover:gap-6 transition-all duration-300 group"
             >
               Charter This Aircraft
               <span className="w-6 h-px bg-[#C9A55A] group-hover:w-10 transition-all duration-300" />

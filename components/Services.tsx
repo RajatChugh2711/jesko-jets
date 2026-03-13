@@ -132,13 +132,13 @@ export default function Services() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative py-32 md:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
+      className="relative py-20 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C9A55A]/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-20">
+        <div className="mb-12 md:mb-20">
           <p
             ref={eyebrowRef}
             className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4"

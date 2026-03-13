@@ -19,7 +19,7 @@ const AIRCRAFT = [
   {
     name: "Bombardier Global 7500",
     category: "Business Jet",
-    image: "https://images.unsplash.com/photo-1583396618422-a50d78f6b79f?q=90&w=900",
+    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=90&w=900",
     specs: [
       { label: "Range",      value: "7,700 nm" },
       { label: "Speed",      value: "Mach 0.925" },
@@ -102,7 +102,7 @@ export default function Fleet() {
     <section
       ref={sectionRef}
       id="fleet"
-      className="relative py-32 md:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
+      className="relative py-20 md:py-32 lg:py-40 px-8 md:px-20 lg:px-32 bg-[#050505] overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C9A55A]/20 to-transparent" />
 

@@ -20,21 +20,22 @@ export default function Navbar() {
   const animRef     = useRef<gsap.core.Tween | null>(null); // entrance anim ref
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ── Smooth-scroll to a section, then refresh ScrollTrigger ──────
-  // We must NOT rely on the browser's instant anchor jump because
-  // GSAP's pin spacer shifts DOM positions; scrollIntoView handles
-  // the spacer correctly, and the 600ms delay covers the transition.
+  // ── Smooth-scroll to a section, offset by navbar height ─────────
+  // scrollIntoView({ block:"start" }) lands the section UNDER the
+  // fixed navbar. Instead we compute the exact document-level Y
+  // using getBoundingClientRect() + current scrollY, then subtract
+  // the navbar's rendered height so the section headline is visible.
   const navigateTo = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    const navHeight = navRef.current?.offsetHeight ?? 70;
+    const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
 
-    // Refresh after smooth scroll settles so all ScrollTrigger
-    // start/end calculations are based on the new scroll position.
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 700);
+    window.scrollTo({ top, behavior: "smooth" });
+
+    // Refresh ScrollTrigger after the smooth scroll settles (~800 ms).
+    setTimeout(() => ScrollTrigger.refresh(), 800);
   }, []);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function Navbar() {
       {/* ── Logo ── */}
       <a
         href="#"
-        onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => ScrollTrigger.refresh(), 700); }}
+        onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => ScrollTrigger.refresh(), 800); }}
         className="flex items-center gap-2 group"
       >
         <span className="text-xl font-bold tracking-[0.3em] text-white uppercase">
@@ -163,13 +164,15 @@ export default function Navbar() {
       {menuOpen && (
         <div className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-[#C9A55A]/10 md:hidden">
           <ul className="flex flex-col py-6">
-            {[...NAV_LINKS, "Book Now"].map((item) => (
+            {[...NAV_LINKS, "Book Now"].map((item) => {
+              const id = item === "Book Now" ? "book" : item.toLowerCase();
+              return (
               <li key={item}>
                 <a
-                  href={`#${item.toLowerCase().replace(" ", "")}`}
+                  href={`#${id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    navigateTo(item.toLowerCase().replace(" ", ""));
+                    navigateTo(id);
                     setMenuOpen(false);
                   }}
                   className="block px-8 py-4 text-xs tracking-[0.25em] uppercase text-white/60 hover:text-[#C9A55A] transition-colors duration-300"
@@ -177,7 +180,8 @@ export default function Navbar() {
                   {item}
                 </a>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
       )}
