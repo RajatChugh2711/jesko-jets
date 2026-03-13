@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -59,35 +59,70 @@ const SERVICES = [
 ];
 
 export default function Services() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const eyebrowRef  = useRef<HTMLParagraphElement>(null);
+  const headingRef  = useRef<HTMLHeadingElement>(null);
+  const dividerRef  = useRef<HTMLDivElement>(null);
+  const gridRef     = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(".service-header", {
-        opacity: 0,
-        y: 40,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power3.out",
+
+      // ── Header timeline ─────────────────────────────────────────────
+      const headerTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 78%",
+          once: true,
+          invalidateOnRefresh: true,
         },
+        defaults: { ease: "power3.out" },
       });
 
-      gsap.from(".service-card", {
-        opacity: 0,
-        y: 70,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power3.out",
+      headerTl
+        // Eyebrow slides in from left + fade
+        .from(eyebrowRef.current, {
+          x: -40,
+          opacity: 0,
+          duration: 0.8,
+        })
+        // Gold divider grows from left
+        .from(
+          dividerRef.current,
+          { scaleX: 0, transformOrigin: "left center", duration: 0.7, ease: "power2.out" },
+          "-=0.4"
+        )
+        // Heading clips up
+        .from(
+          headingRef.current,
+          { y: 70, opacity: 0, duration: 1, force3D: true },
+          "-=0.5"
+        );
+
+      // ── Cards: fan in from below with stagger + 3-D tilt ────────────
+      const cardTl = gsap.timeline({
         scrollTrigger: {
-          trigger: ".services-grid",
-          start: "top 80%",
+          trigger: gridRef.current,
+          start: "top 82%",
+          once: true,
+          invalidateOnRefresh: true,
         },
+        defaults: { ease: "power3.out", force3D: true },
       });
+
+      cardTl.from(".service-card", {
+        y: 100,
+        opacity: 0,
+        rotateX: 12,
+        scale: 0.92,
+        stagger: { each: 0.14, from: "start" },
+        duration: 1.1,
+        transformOrigin: "center bottom",
+        clearProps: "transform,opacity",
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -104,17 +139,27 @@ export default function Services() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-20">
-          <p className="service-header text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4">
+          <p
+            ref={eyebrowRef}
+            className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4"
+          >
             What We Offer
           </p>
-          <h2 className="service-header text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight">
+          <div
+            ref={dividerRef}
+            className="w-10 h-px bg-[#C9A55A]/40 mb-6"
+          />
+          <h2
+            ref={headingRef}
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight"
+          >
             Crafted for
             <span className="font-bold italic"> the few</span>
           </h2>
         </div>
 
         {/* Services Grid */}
-        <div className="services-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {SERVICES.map((service) => (
             <div
               key={service.title}

@@ -21,6 +21,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "GT America Extended", Arial, sans-serif;
 }
 
 /* ─── Custom Scrollbar ─── */

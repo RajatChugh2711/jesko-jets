@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 const FOOTER_LINKS = {
   Fleet: ["Gulfstream G650ER", "Bombardier Global 7500", "Dassault Falcon 8X"],
@@ -7,8 +10,82 @@ const FOOTER_LINKS = {
 };
 
 export default function Footer() {
+  const footerRef  = useRef<HTMLElement>(null);
+  const brandRef   = useRef<HTMLDivElement>(null);
+  const bottomRef  = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+
+      // ── Brand column slides in from left ──────────────────────────
+      gsap.from(brandRef.current, {
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        force3D: true,
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 88%",
+          once: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // ── Link columns stagger up from below ────────────────────────
+      gsap.from(".footer-col", {
+        y: 50,
+        opacity: 0,
+        stagger: 0.14,
+        duration: 0.9,
+        ease: "power3.out",
+        force3D: true,
+        clearProps: "transform,opacity",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 88%",
+          once: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // ── Gold divider line grows from left ─────────────────────────
+      gsap.from(".footer-divider", {
+        scaleX: 0,
+        transformOrigin: "left center",
+        duration: 1.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 88%",
+          once: true,
+        },
+      });
+
+      // ── Bottom bar fades in last ───────────────────────────────────
+      gsap.from(bottomRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        ease: "power2.out",
+        delay: 0.4,
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 88%",
+          once: true,
+        },
+      });
+
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <footer
+      ref={footerRef}
       id="contact"
       className="relative bg-[#030303] border-t border-[#C9A55A]/10 overflow-hidden"
     >
@@ -24,10 +101,10 @@ export default function Footer() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-20 lg:px-32 pt-20 pb-10">
         {/* ── Top Row ── */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-14 pb-16 border-b border-white/5">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-14 pb-16">
+
           {/* Brand Column */}
-          <div className="lg:col-span-2 flex flex-col gap-6">
-            {/* Logo */}
+          <div ref={brandRef} className="lg:col-span-2 flex flex-col gap-6">
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold tracking-[0.3em] text-white uppercase">
                 Jesko
@@ -43,7 +120,6 @@ export default function Footer() {
               art of refined living at 45,000 feet.
             </p>
 
-            {/* Contact Info */}
             <div className="flex flex-col gap-3 mt-2">
               {[
                 { label: "Phone", value: "+1 (800) JESKO-1" },
@@ -62,7 +138,7 @@ export default function Footer() {
 
           {/* Link Columns */}
           {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-            <div key={title} className="flex flex-col gap-5">
+            <div key={title} className="footer-col flex flex-col gap-5">
               <h4 className="text-[9px] tracking-[0.35em] uppercase text-[#C9A55A]">
                 {title}
               </h4>
@@ -82,13 +158,15 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* Divider */}
+        <div className="footer-divider w-full h-px bg-white/5 mb-8" />
+
         {/* ── Bottom Row ── */}
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div ref={bottomRef} className="flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left">
           <p className="text-[9px] tracking-[0.2em] uppercase text-white/20">
             © {new Date().getFullYear()} Jesko Jets. All rights reserved.
           </p>
 
-          {/* Social Icons */}
           <div className="flex items-center gap-6">
             {["Instagram", "LinkedIn", "Twitter"].map((social) => (
               <a

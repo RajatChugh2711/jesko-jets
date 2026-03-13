@@ -19,7 +19,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={manrope.variable}>
-      <body className={`${manrope.className} grain`}>{children}</body>
+      <body className="grain">{children}</body>
     </html>
   );
 }

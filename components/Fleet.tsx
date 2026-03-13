@@ -111,7 +111,7 @@ export default function Fleet() {
         {/* ── Section Header ── */}
         <div
           ref={headerRef}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6"
+          className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 md:mb-20 gap-4 sm:gap-6"
         >
           <div>
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4">
@@ -131,7 +131,7 @@ export default function Fleet() {
         {/* ── Aircraft Grid ── */}
         <div
           ref={gridRef}
-          className="grid md:grid-cols-3 gap-6"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {AIRCRAFT.map((aircraft) => (
             <div

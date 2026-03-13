@@ -117,7 +117,7 @@ export default function Destinations() {
         {/* ── Header ── */}
         <div
           ref={headerRef}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6"
+          className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 md:mb-20 gap-4 sm:gap-6"
         >
           <div>
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4">
@@ -142,7 +142,7 @@ export default function Destinations() {
             <div
               key={dest.city}
               className={`dest-card group relative overflow-hidden cursor-pointer ${
-                dest.featured ? "h-72 md:h-80" : "h-52 md:h-64"
+                dest.featured ? "h-52 sm:h-64 md:h-80" : "h-36 sm:h-48 md:h-64"
               }`}
               style={{ willChange: "transform, opacity" }}
             >

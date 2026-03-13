@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 type FormState = "idle" | "loading" | "success" | "error";
@@ -35,26 +35,84 @@ const INITIAL_FORM: FormData = {
 };
 
 export default function BookFlight() {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const eyebrowRef   = useRef<HTMLParagraphElement>(null);
+  const headingRef   = useRef<HTMLHeadingElement>(null);
+  const subRef       = useRef<HTMLParagraphElement>(null);
+  const dividerRef   = useRef<HTMLDivElement>(null);
+  const formRef      = useRef<HTMLFormElement | HTMLDivElement>(null);
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [status, setStatus] = useState<FormState>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      gsap.from(".book-content", {
-        opacity: 0,
-        y: 60,
-        stagger: 0.15,
-        duration: 1.1,
-        ease: "power3.out",
+
+      // ── Header reveal timeline ──────────────────────────────────────
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 75%",
+          once: true,
+          invalidateOnRefresh: true,
+        },
+        defaults: { ease: "power3.out" },
+      });
+
+      tl
+        // Eyebrow drifts up from below
+        .from(eyebrowRef.current, { y: 30, opacity: 0, duration: 0.7 })
+        // Gold divider grows from centre outward
+        .from(
+          dividerRef.current,
+          { scaleX: 0, transformOrigin: "center center", duration: 0.8, ease: "power2.out" },
+          "-=0.3"
+        )
+        // Heading rises
+        .from(
+          headingRef.current,
+          { y: 60, opacity: 0, duration: 1, force3D: true },
+          "-=0.5"
+        )
+        // Subtitle fades
+        .from(
+          subRef.current,
+          { y: 24, opacity: 0, duration: 0.7 },
+          "-=0.6"
+        )
+        // Form panel slides up from deeper
+        .from(
+          ".book-form-panel",
+          { y: 80, opacity: 0, duration: 1.1, ease: "power3.out", force3D: true },
+          "-=0.5"
+        )
+        // Individual form fields stagger in
+        .from(
+          ".book-field",
+          { y: 30, opacity: 0, stagger: 0.09, duration: 0.65 },
+          "-=0.7"
+        )
+        // Submit row last
+        .from(
+          ".book-submit-row",
+          { y: 20, opacity: 0, duration: 0.6 },
+          "-=0.3"
+        );
+
+      // ── Watermark parallax ──────────────────────────────────────────
+      gsap.to(".book-watermark", {
+        y: -60,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
         },
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -70,10 +128,8 @@ export default function BookFlight() {
     e.preventDefault();
     setStatus("loading");
 
-    // Mock API call with setTimeout
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Simulate occasional error (20% chance)
     if (Math.random() < 0.2) {
       setStatus("error");
       setErrorMsg(
@@ -101,7 +157,7 @@ export default function BookFlight() {
 
       {/* Background text watermark */}
       <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
+        className="book-watermark absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
         aria-hidden
       >
         <span
@@ -114,15 +170,28 @@ export default function BookFlight() {
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
-        <div className="book-content mb-14 text-center">
-          <p className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4">
+        <div className="mb-14 text-center">
+          <p
+            ref={eyebrowRef}
+            className="text-[10px] tracking-[0.4em] uppercase text-[#C9A55A] mb-4"
+          >
             Private Charter
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight">
+          <div
+            ref={dividerRef}
+            className="w-16 h-px bg-[#C9A55A]/40 mx-auto mb-6"
+          />
+          <h2
+            ref={headingRef}
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight"
+          >
             Reserve your
             <span className="font-bold italic"> journey</span>
           </h2>
-          <p className="mt-4 text-sm text-white/40 font-light">
+          <p
+            ref={subRef}
+            className="mt-4 text-sm text-white/40 font-light"
+          >
             Complete the form and our aviation concierge will contact you within
             2 hours.
           </p>
@@ -130,8 +199,7 @@ export default function BookFlight() {
 
         {/* ── Success State ── */}
         {status === "success" ? (
-          <div className="book-content flex flex-col items-center gap-8 py-16 border border-[#C9A55A]/20 bg-[#0f0f0f] text-center px-8">
-            {/* Animated checkmark */}
+          <div className="book-form-panel flex flex-col items-center gap-8 py-16 border border-[#C9A55A]/20 bg-[#0f0f0f] text-center px-8">
             <div className="w-16 h-16 rounded-full border border-[#C9A55A] flex items-center justify-center">
               <svg
                 viewBox="0 0 24 24"
@@ -170,10 +238,10 @@ export default function BookFlight() {
           /* ── Form ── */
           <form
             onSubmit={handleSubmit}
-            className="book-content grid md:grid-cols-2 gap-5 bg-[#0f0f0f] border border-white/5 p-8 md:p-12"
+            className="book-form-panel grid md:grid-cols-2 gap-5 bg-[#0f0f0f] border border-white/5 p-8 md:p-12"
           >
             {/* Name */}
-            <div className="flex flex-col gap-2">
+            <div className="book-field flex flex-col gap-2">
               <label className="text-[9px] tracking-[0.3em] uppercase text-[#C9A55A]">
                 Full Name *
               </label>
@@ -189,7 +257,7 @@ export default function BookFlight() {
             </div>
 
             {/* Email */}
-            <div className="flex flex-col gap-2">
+            <div className="book-field flex flex-col gap-2">
               <label className="text-[9px] tracking-[0.3em] uppercase text-[#C9A55A]">
                 Email Address *
               </label>
@@ -205,7 +273,7 @@ export default function BookFlight() {
             </div>
 
             {/* Phone */}
-            <div className="flex flex-col gap-2">
+            <div className="book-field flex flex-col gap-2">
               <label className="text-[9px] tracking-[0.3em] uppercase text-[#C9A55A]">
                 Phone Number *
               </label>
@@ -221,7 +289,7 @@ export default function BookFlight() {
             </div>
 
             {/* Destination */}
-            <div className="flex flex-col gap-2">
+            <div className="book-field flex flex-col gap-2">
               <label className="text-[9px] tracking-[0.3em] uppercase text-[#C9A55A]">
                 Destination *
               </label>
@@ -244,7 +312,7 @@ export default function BookFlight() {
             </div>
 
             {/* Date — full width */}
-            <div className="md:col-span-2 flex flex-col gap-2">
+            <div className="book-field md:col-span-2 flex flex-col gap-2">
               <label className="text-[9px] tracking-[0.3em] uppercase text-[#C9A55A]">
                 Preferred Departure Date *
               </label>
@@ -284,7 +352,7 @@ export default function BookFlight() {
             )}
 
             {/* Submit */}
-            <div className="md:col-span-2 flex items-center gap-6 pt-4">
+            <div className="book-submit-row md:col-span-2 flex flex-wrap items-center gap-4 sm:gap-6 pt-4">
               <button
                 type="submit"
                 disabled={status === "loading"}
