@@ -24,8 +24,8 @@ export default function Hero() {
 
       gsap.set(bgRef.current,{ scale:1.15 })
       gsap.set(windowRef.current,{ scale:1, opacity:1 })
-      gsap.set(leftRef.current,{ x:-250, opacity:0 })
-      gsap.set(rightRef.current,{ x:250, opacity:0 })
+      gsap.set(".hero-left",{ yPercent:120 })
+      gsap.set(".hero-right",{ yPercent:120 })
       gsap.set(bottomRef.current,{ y:40, opacity:0 })
 
 
@@ -35,10 +35,28 @@ export default function Hero() {
 
       intro
       .to(bgRef.current,{ scale:1, duration:2 })
-      .to(leftRef.current,{ x:0, opacity:1, duration:1.2 },"-=1.2")
-      .to(rightRef.current,{ x:0, opacity:1, duration:1.2 },"<")
+      
+      .to(".hero-left",{
+        yPercent:0,
+        duration:1.4,
+        ease:"power4.out"
+      },"-=1.2")
+      
+      .to(".hero-right",{
+        yPercent:0,
+        duration:1.4,
+        ease:"power4.out"
+      },"<")
+      
       .to(bottomRef.current,{ y:0, opacity:1, duration:.8 },"-=.8")
 
+      gsap.to(bgRef.current,{
+        y:"+=15",
+        duration:6,
+        repeat:-1,
+        yoyo:true,
+        ease:"sine.inOut"
+      })
 
       /* SCROLL CINEMATIC TIMELINE */
 
@@ -47,9 +65,9 @@ export default function Hero() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=220%",
+          end: "+=320%",
           pin: true,
-          scrub: 1,           // links animation to scroll progress
+          scrub: 1.4,           // links animation to scroll progress
           anticipatePin: 1
         }
 
@@ -59,8 +77,9 @@ export default function Hero() {
       /* SKY PARALLAX */
 
       tl.to(bgRef.current,{
-        y:-160,
-        scale:1.25,
+        y:-200,
+        scale:1.3,
+        rotate:0.6,
         ease:"none",
         duration:10
       },0)
@@ -101,7 +120,8 @@ export default function Hero() {
       /* WINDOW FLY THROUGH */
 
       tl.to(windowRef.current,{
-        scale:11,
+        scale:14,
+        filter:"blur(6px)",
         transformOrigin:"center center",
         ease:"power2.in",
         duration:9
@@ -127,7 +147,7 @@ export default function Hero() {
 
     <section
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-black"
+      className="relative w-full min-h-[120vh] overflow-hidden bg-black"
     >
 
       {/* SKY */}
@@ -168,36 +188,30 @@ export default function Hero() {
 
       <div className="absolute inset-0 z-20 flex flex-col md:flex-row items-start md:items-center justify-between px-6 sm:px-10 md:px-12 lg:px-24 pt-24 pb-20 md:pt-0 md:pb-0">
 
-        <div ref={leftRef}>
+      <div ref={leftRef}>
 
-          <p className="text-[10px] tracking-[0.45em] uppercase text-[#C9A55A] mb-3 md:mb-5">
-            Est. 2008
-          </p>
+<p className="text-[10px] tracking-[0.45em] uppercase text-[#C9A55A] mb-3 md:mb-5">
+  Est. 2008
+</p>
 
-          <h1 className="text-[clamp(3.2rem,5vw,6rem)] leading-[1.05] text-white font-light">
+<div className="overflow-hidden">
+  <h1 className="hero-left text-[clamp(3.2rem,5vw,6rem)] leading-[1.05] text-white font-light">
+    We are <br/>
+    <span className="font-bold italic">movement</span>
+  </h1>
+</div>
 
-            We are <br/>
-
-            <span className="font-bold italic">
-              movement
-            </span>
-
-          </h1>
-
-        </div>
+</div>
 
 
         <div ref={rightRef} className="mt-auto md:mt-0 md:text-right">
 
-          <h1 className="text-[clamp(3.2rem,5vw,6rem)] leading-[1.05] text-white font-light">
-
-            We are <br/>
-
-            <span className="font-bold italic">
-              distinction
-            </span>
-
-          </h1>
+        <div className="overflow-hidden">
+  <h1 className="hero-right text-[clamp(3.2rem,5vw,6rem)] leading-[1.05] text-white font-light">
+    We are <br/>
+    <span className="font-bold italic">distinction</span>
+  </h1>
+</div>
 
         </div>
 
