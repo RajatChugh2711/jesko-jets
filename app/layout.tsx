@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={manrope.variable}>
-      <body className="grain">{children}</body>
+      <body className="grain">
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }
